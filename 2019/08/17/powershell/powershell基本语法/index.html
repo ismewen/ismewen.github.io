@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2">
+
+
+
+
+
+
+<meta name="description" content="变量 powershell中的变量名都以$开始，powershell变量名大小写不敏感。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="powershell基本语法">
+<meta property="og:url" content="http://yoursite.com/2019/08/17/powershell/powershell基本语法/index.html">
+<meta property="og:site_name" content="南山有桑,北山有杨">
+<meta property="og:description" content="变量 powershell中的变量名都以$开始，powershell变量名大小写不敏感。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-03-10T00:55:40.899Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="powershell基本语法">
+<meta name="twitter:description" content="变量 powershell中的变量名都以$开始，powershell变量名大小写不敏感。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/08/17/powershell/powershell基本语法/">
+
+
+
+
+
+  <title>powershell基本语法 | 南山有桑,北山有杨</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">南山有桑,北山有杨</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">高山仰止,景行行止<br>虽不能至,然心向往之。</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/17/powershell/powershell基本语法/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="theStar">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/logo.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="南山有桑,北山有杨">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">powershell基本语法</h1>
+        
+
+        <div class="post-meta">
+                
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-17T20:01:06+08:00">
+                2019-08-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/powershell/" itemprop="url" rel="index">
+                    <span itemprop="name">powershell</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/08/17/powershell/powershell基本语法/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/08/17/powershell/powershell基本语法/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  961
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  4
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="变量"><a class="header-anchor" href="#变量"></a>变量</h3>
+<p>powershell中的变量名都以$开始，powershell变量名<strong>大小写</strong>不敏感。</p>
+<a id="more"></a>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$a</span>=<span class="number">10</span> <span class="comment"># 变量定义，注意和shell 不同 a=10</span></span><br></pre></td></tr></table></figure>
+<h3 id="条件判断"><a class="header-anchor" href="#条件判断"></a>条件判断</h3>
+<h4 id="比较运算符"><a class="header-anchor" href="#比较运算符"></a>比较运算符</h4>
+<ul>
+<li>-eq ：等于</li>
+<li>-ne ：不等于</li>
+<li>-gt ：大于</li>
+<li>-ge ：大于等于</li>
+<li>-lt ：小于</li>
+<li>-le ：小于等于</li>
+<li>-contains ：包含</li>
+<li>-notcontains :不包含</li>
+</ul>
+<h4 id="布尔运算"><a class="header-anchor" href="#布尔运算"></a>布尔运算</h4>
+<ul>
+<li>-and ：和</li>
+<li>-or ：或</li>
+<li>-xor ：异或</li>
+<li>-not ：逆</li>
+</ul>
+<h4 id="where-object-过滤"><a class="header-anchor" href="#where-object-过滤"></a>where-object 过滤</h4>
+<p>where object 跟python 的列表生成有异曲同工之妙
+Some-Command | where-object{SOME_CONDITION} # 返回满足条件的结果</p>
+<h4 id="if语句"><a class="header-anchor" href="#if语句"></a>if语句</h4>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$a</span>=<span class="number">1</span></span><br><span class="line"><span class="keyword">If</span>(<span class="variable">$a</span> <span class="nomarkup">-eq</span> <span class="number">1</span>)&#123;</span><br><span class="line">    <span class="built_in">Write-Host</span> <span class="string">"if"</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">Elseif</span>(<span class="variable">$a</span> <span class="nomarkup">-eq</span> <span class="number">2</span>)&#123;</span><br><span class="line">    <span class="built_in">Write-Host</span> <span class="string">"elif"</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">Else</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">Write-Host</span> <span class="string">"not meet if"</span> </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="switch-语句"><a class="header-anchor" href="#switch-语句"></a>switch 语句</h4>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$value</span>=<span class="number">99</span></span><br><span class="line"><span class="comment"># 使用 Switch 测试取值范围, switch 还支持配配符比较</span></span><br><span class="line"><span class="keyword">switch</span>(<span class="variable">$value</span>)</span><br><span class="line">&#123;</span><br><span class="line">    &#123;<span class="variable">$_</span> <span class="nomarkup">-lt</span> <span class="number">5</span> &#125;   &#123; <span class="string">"小于5"</span>; <span class="keyword">break</span>&#125;</span><br><span class="line">    &#123;<span class="variable">$_</span> <span class="nomarkup">-gt</span> <span class="number">0</span> &#125;   &#123; <span class="string">"大于0"</span>; <span class="keyword">break</span>&#125;</span><br><span class="line">    &#123;<span class="variable">$_</span> <span class="nomarkup">-lt</span> <span class="number">100</span>&#125;  &#123; <span class="string">"小于100"</span>; <span class="keyword">break</span>&#125;</span><br><span class="line">    <span class="number">101</span> &#123;<span class="string">"等于101"</span>&#125;</span><br><span class="line">    Default &#123;<span class="string">"没有匹配条件"</span>&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="数组"><a class="header-anchor" href="#数组"></a>数组</h3>
+<h4 id="数组创建"><a class="header-anchor" href="#数组创建"></a>数组创建</h4>
+<p>数组 （） ，用 “,” 分割</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$id</span>=<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span></span><br><span class="line"><span class="variable">$id</span>=@(<span class="number">1</span>,<span class="number">2</span>,<span class="number">2</span>)</span><br><span class="line"><span class="variable">$id</span>=@() <span class="comment"># 空数组</span></span><br><span class="line"><span class="variable">$id</span>=,<span class="number">1</span> <span class="comment"># 等价 $id=@(1)</span></span><br><span class="line">[int[]] <span class="variable">$nums</span>=@() <span class="comment"># 强类型数组，数组的元素必须都是数字，如果不是数字会报错</span></span><br></pre></td></tr></table></figure>
+<h4 id="数组查询"><a class="header-anchor" href="#数组查询"></a>数组查询</h4>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$id</span>=<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span></span><br><span class="line"><span class="variable">$id</span>[<span class="number">0</span>] <span class="comment"># 国际惯例，从0开始计数</span></span><br><span class="line"><span class="variable">$id</span>[<span class="number">0</span>..<span class="number">2</span>] <span class="comment"># 选取0到2 都是闭区间 </span></span><br><span class="line"><span class="variable">$id</span>[-<span class="number">1</span>] <span class="comment">#　获取最后一个元素</span></span><br><span class="line"><span class="variable">$id</span>.count <span class="comment"># 数组的长度</span></span><br><span class="line"><span class="variable">$id</span>[<span class="variable">$id</span>.count..<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+<h4 id="数组操作"><a class="header-anchor" href="#数组操作"></a>数组操作</h4>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$id</span>+=<span class="string">'hello'</span></span><br><span class="line"><span class="variable">$id</span>=<span class="variable">$id</span>+<span class="number">2</span></span><br><span class="line"><span class="variable">$id</span>=<span class="variable">$id</span>[<span class="number">0</span>..<span class="number">1</span>]+$[<span class="number">3</span>..<span class="variable">$id</span>.count] <span class="comment"># 你不是真正的删除，本质是重新赋值</span></span><br><span class="line"><span class="variable">$id</span>=<span class="variable">$id</span>[<span class="number">1</span>..<span class="variable">$id</span>.count] <span class="comment"># 删除第一个元素</span></span><br><span class="line"><span class="variable">$id</span>=<span class="variable">$id</span>[<span class="number">0</span>..(<span class="variable">$id</span>.count-<span class="number">2</span>)] <span class="comment"># 删除最后一个元素</span></span><br><span class="line"><span class="variable">$str</span>=<span class="string">"hello world"</span></span><br><span class="line"><span class="variable">$str</span>.Tochararray() <span class="comment"># 字符串转数组   </span></span><br><span class="line"><span class="variable">$id</span> is [array] <span class="comment"># 判断变量是否是数组</span></span><br><span class="line"><span class="variable">$id</span>.getType() <span class="comment"># 获取变量的类型</span></span><br><span class="line"><span class="variable">$back_up</span> = <span class="variable">$id</span>.clone() <span class="comment"># 赋值数组</span></span><br></pre></td></tr></table></figure>
+<h3 id="hash表"><a class="header-anchor" href="#hash表"></a>hash表</h3>
+<p>hash表用{}创建用 &quot;;&quot;分割</p>
+<h4 id="创建hash表"><a class="header-anchor" href="#创建hash表"></a>创建hash表</h4>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$man</span> = @&#123;name=<span class="string">"wen"</span>;age=<span class="string">"10"</span>&#125; <span class="comment"># 哈希表用；分割，数组用逗号分割 </span></span><br><span class="line"><span class="variable">$man</span> is [array] <span class="comment"># false</span></span><br><span class="line"><span class="variable">$man</span>.gettype() <span class="comment"># hashtable</span></span><br></pre></td></tr></table></figure>
+<h4 id="hash表查询"><a class="header-anchor" href="#hash表查询"></a>hash表查询</h4>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 直接 . + key 获取</span></span><br><span class="line"><span class="variable">$man</span>.name</span><br><span class="line"><span class="variable">$man</span>.age</span><br><span class="line"></span><br><span class="line"><span class="comment"># [key] 的形式获取</span></span><br><span class="line"></span><br><span class="line"><span class="variable">$man</span>[<span class="string">"name"</span>]</span><br><span class="line"><span class="variable">$man</span>[<span class="string">"name"</span>, <span class="string">"age"</span>] <span class="comment"># 有点意思</span></span><br><span class="line"><span class="variable">$man</span>.keys <span class="comment"># 返回所有的 键</span></span><br><span class="line"><span class="variable">$man</span>[<span class="variable">$man</span>.keys] <span class="comment"># 返回所有的values</span></span><br></pre></td></tr></table></figure>
+<h4 id="hash-表的基本操作"><a class="header-anchor" href="#hash-表的基本操作"></a>hash 表的基本操作</h4>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$man</span>.girl_friend= <span class="string">"桔梗"</span> <span class="comment"># 添加不存在的key的时候，便可以为hash表添加新的元素</span></span><br><span class="line"><span class="variable">$man</span>.age = <span class="number">24</span> <span class="comment"># 对已经存在的key重新复制就是修改</span></span><br><span class="line"><span class="variable">$man</span>.clear() <span class="comment"># 清空hash表</span></span><br><span class="line"><span class="variable">$man</span>.clone() <span class="comment"># clone 一个hash表</span></span><br><span class="line"><span class="variable">$man</span>.remove(key) <span class="comment"># 删除元素</span></span><br><span class="line"><span class="variable">$man</span>.contains() <span class="comment"># 检测key 是否存在</span></span><br><span class="line"><span class="variable">$man</span>.containsKey() <span class="comment"># 检测key 是否存在</span></span><br><span class="line"><span class="variable">$man</span>.containsValue() <span class="comment"># 检测value是否存在</span></span><br></pre></td></tr></table></figure>
+<h3 id="循环"><a class="header-anchor" href="#循环"></a>循环</h3>
+<h4 id="foreach-object"><a class="header-anchor" href="#foreach-object"></a>Foreach-object</h4>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Get-WmiObject</span> Win32_Service | <span class="built_in">ForEach-Object</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$_</span>.ProcessId <span class="nomarkup">-gt</span> <span class="number">3000</span>)</span><br><span class="line">    &#123; <span class="string">"&#123;0&#125;(&#123;1&#125;)"</span> -f <span class="variable">$_</span>.DisplayName,<span class="variable">$_</span>.ProcessID&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="foreach"><a class="header-anchor" href="#foreach"></a>foreach</h4>
+<p>$ids=1,2,2,3,4,45
+foreach($id in $ids)
+{
+Write-Host $id
+}</p>
+<h4 id="do-while"><a class="header-anchor" href="#do-while"></a>do-while</h4>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$i</span>=<span class="number">100</span></span><br><span class="line"><span class="keyword">do</span>&#123;</span><br><span class="line">    <span class="built_in">Write-Host</span> <span class="variable">$i</span></span><br><span class="line">    <span class="variable">$i</span>=<span class="variable">$i</span>-<span class="number">1</span></span><br><span class="line">&#125;<span class="keyword">while</span>(<span class="variable">$i</span> <span class="nomarkup">-lt</span> <span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<p>国际惯例:</p>
+<ul>
+<li>continue: 结束本次循环, 开始下次循环</li>
+<li>break: 跳出循环</li>
+</ul>
+<h4 id="for-循环"><a class="header-anchor" href="#for-循环"></a>for 循环</h4>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$sum</span>=<span class="number">0</span></span><br><span class="line"><span class="variable">$i</span>=<span class="number">1</span></span><br><span class="line"><span class="keyword">for</span>(;<span class="variable">$i</span> <span class="nomarkup">-le</span> <span class="number">100</span>;)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="variable">$sum</span>+=<span class="variable">$i</span></span><br><span class="line">    <span class="variable">$i</span>++</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable">$sum</span></span><br></pre></td></tr></table></figure>
+<h3 id="函数"><a class="header-anchor" href="#函数"></a>函数</h3>
+<h4 id="基本定义"><a class="header-anchor" href="#基本定义"></a>基本定义</h4>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Function</span> FuncName</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">Write-Host</span> <span class="string">"hello world"</span> </span><br><span class="line">&#125;</span><br><span class="line">del <span class="keyword">Function</span>:FuncName <span class="comment"># 删除函数</span></span><br></pre></td></tr></table></figure>
+<h4 id="args"><a class="header-anchor" href="#args"></a>$args</h4>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FuncName <span class="number">1</span> <span class="number">2</span> <span class="number">3</span> <span class="number">4</span> <span class="comment"># 函数中$args存储传进来的参数 $args=[1,2,3,4]</span></span><br></pre></td></tr></table></figure>
+<h4 id="带名字的参数"><a class="header-anchor" href="#带名字的参数"></a>带名字的参数</h4>
+<p>!! 带名字的参数 $args 变量为空</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> StringContact(<span class="variable">$str1</span>=<span class="string">"hh"</span>,<span class="variable">$str2</span>=<span class="string">"hh"</span>)</span><br><span class="line">&#123;   <span class="built_in">Write-Host</span> <span class="variable">$str1</span> <span class="variable">$str2</span></span><br><span class="line">    <span class="built_in">Write-Host</span> <span class="variable">$args</span></span><br><span class="line">    <span class="built_in">Write-Host</span> <span class="string">"what happen"</span></span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$str1</span>+<span class="variable">$str2</span></span><br><span class="line">&#125;</span><br><span class="line">StringContact(<span class="string">"hello"</span>,<span class="string">"ethan"</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="强类型的参数"><a class="header-anchor" href="#强类型的参数"></a>强类型的参数</h4>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> subtract([int]<span class="variable">$value1</span>,[int]<span class="variable">$value2</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$value1</span>-<span class="variable">$value2</span></span><br><span class="line">&#125;</span><br><span class="line">subtract <span class="number">2</span> <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<h3 id="类和对象"><a class="header-anchor" href="#类和对象"></a>类和对象</h3>
+<p>python 的类 只能在 5.0及其以上才能使用</p>
+<h3 id="对象的创建"><a class="header-anchor" href="#对象的创建"></a>对象的创建</h3>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ethan</span>=<span class="built_in">New-Object</span> PSObject -Property `</span><br><span class="line">@&#123;</span><br><span class="line">    name=<span class="string">"ethan"</span>;</span><br><span class="line">    age=<span class="number">18</span>;</span><br><span class="line">    books=@(<span class="string">""</span>,<span class="string">""</span>,<span class="string">""</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">Add-Member</span> -InputObject <span class="variable">$ethan</span> -MemberType NoteProperty -Name Color -Value <span class="string">"Red"</span> <span class="comment">#　添加新的属性</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">Add-Member</span> <span class="nomarkup">-in</span> <span class="variable">$ethan</span> CopyMethod speak&#123; <span class="built_in">Write-Host</span> <span class="string">"hello world"</span> &#125; <span class="comment"># 添加新的方法（添加带参数的方法的时候会报错）</span></span><br></pre></td></tr></table></figure>
+<h3 id="类定义"><a class="header-anchor" href="#类定义"></a>类定义</h3>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Class Student</span><br><span class="line">&#123;</span><br><span class="line">    [String]<span class="variable">$Name</span>;</span><br><span class="line">    [UInt32]<span class="variable">$SID</span>;</span><br><span class="line"></span><br><span class="line">    Student([String]<span class="variable">$Name</span>,[UInt32]<span class="variable">$SID</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="variable">$this</span>.Name=<span class="variable">$Name</span></span><br><span class="line">        <span class="variable">$this</span>.SID=<span class="variable">$SID</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [String]getSID()</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$this</span>.SID</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable">$ethan</span>=[Student]::new(<span class="string">"ethan"</span>,<span class="number">1</span>)</span><br><span class="line"><span class="variable">$ethan</span>.Name</span><br><span class="line"><span class="variable">$ethan</span>.SID</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/08/17/码乙己/" rel="next" title="码乙己">
+                <i class="fa fa-chevron-left"></i> 码乙己
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/08/21/sqlalchemy初篇/" rel="prev" title="sqlalchemy初篇">
+                sqlalchemy初篇 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/logo.png" alt="theStar">
+          <p class="site-author-name" itemprop="name">theStar</p>
+           
+              <p class="site-description motion-element" itemprop="description">下笔时的思绪 落在了树的荫</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#变量"><span class="nav-number">1.</span> <span class="nav-text">变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#条件判断"><span class="nav-number">2.</span> <span class="nav-text">条件判断</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#比较运算符"><span class="nav-number">2.1.</span> <span class="nav-text">比较运算符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#布尔运算"><span class="nav-number">2.2.</span> <span class="nav-text">布尔运算</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#where-object-过滤"><span class="nav-number">2.3.</span> <span class="nav-text">where-object 过滤</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#if语句"><span class="nav-number">2.4.</span> <span class="nav-text">if语句</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#switch-语句"><span class="nav-number">2.5.</span> <span class="nav-text">switch 语句</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数组"><span class="nav-number">3.</span> <span class="nav-text">数组</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#数组创建"><span class="nav-number">3.1.</span> <span class="nav-text">数组创建</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#数组查询"><span class="nav-number">3.2.</span> <span class="nav-text">数组查询</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#数组操作"><span class="nav-number">3.3.</span> <span class="nav-text">数组操作</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hash表"><span class="nav-number">4.</span> <span class="nav-text">hash表</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#创建hash表"><span class="nav-number">4.1.</span> <span class="nav-text">创建hash表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hash表查询"><span class="nav-number">4.2.</span> <span class="nav-text">hash表查询</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hash-表的基本操作"><span class="nav-number">4.3.</span> <span class="nav-text">hash 表的基本操作</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#循环"><span class="nav-number">5.</span> <span class="nav-text">循环</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#foreach-object"><span class="nav-number">5.1.</span> <span class="nav-text">Foreach-object</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#foreach"><span class="nav-number">5.2.</span> <span class="nav-text">foreach</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#do-while"><span class="nav-number">5.3.</span> <span class="nav-text">do-while</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#for-循环"><span class="nav-number">5.4.</span> <span class="nav-text">for 循环</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#函数"><span class="nav-number">6.</span> <span class="nav-text">函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#基本定义"><span class="nav-number">6.1.</span> <span class="nav-text">基本定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#args"><span class="nav-number">6.2.</span> <span class="nav-text">$args</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#带名字的参数"><span class="nav-number">6.3.</span> <span class="nav-text">带名字的参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#强类型的参数"><span class="nav-number">6.4.</span> <span class="nav-text">强类型的参数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类和对象"><span class="nav-number">7.</span> <span class="nav-text">类和对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对象的创建"><span class="nav-number">8.</span> <span class="nav-text">对象的创建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类定义"><span class="nav-number">9.</span> <span class="nav-text">类定义</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">theStar</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://ismewen.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://yoursite.com/2019/08/17/powershell/powershell基本语法/';
+          this.page.identifier = '2019/08/17/powershell/powershell基本语法/';
+          this.page.title = 'powershell基本语法';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://ismewen.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

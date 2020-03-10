@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="sqlalchemy,fsm,django,python-metaclass,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2">
+
+
+
+
+
+
+<meta name="description" content="fsm(finite-state machine，缩写：FSM）又称有限状态自动机，简称状态机，是表示有限个状态以及在这些状态之间的转移和动作等行为的数学模型。一直比 较喜欢使用状态机来撸业务。而且看了下新公司的代码，各种状态定义，迁移，感觉也比较适合用状态机。便开始搜索第三方的的fsm库。发现了了两个库 django-fsm和transitions。 便打算选一个加入到项目中去。">
+<meta name="keywords" content="sqlalchemy,fsm,django,python-metaclass">
+<meta property="og:type" content="article">
+<meta property="og:title" content="fsm">
+<meta property="og:url" content="http://yoursite.com/2019/06/30/fsm/index.html">
+<meta property="og:site_name" content="南山有桑,北山有杨">
+<meta property="og:description" content="fsm(finite-state machine，缩写：FSM）又称有限状态自动机，简称状态机，是表示有限个状态以及在这些状态之间的转移和动作等行为的数学模型。一直比 较喜欢使用状态机来撸业务。而且看了下新公司的代码，各种状态定义，迁移，感觉也比较适合用状态机。便开始搜索第三方的的fsm库。发现了了两个库 django-fsm和transitions。 便打算选一个加入到项目中去。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-03-10T00:55:40.899Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="fsm">
+<meta name="twitter:description" content="fsm(finite-state machine，缩写：FSM）又称有限状态自动机，简称状态机，是表示有限个状态以及在这些状态之间的转移和动作等行为的数学模型。一直比 较喜欢使用状态机来撸业务。而且看了下新公司的代码，各种状态定义，迁移，感觉也比较适合用状态机。便开始搜索第三方的的fsm库。发现了了两个库 django-fsm和transitions。 便打算选一个加入到项目中去。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/06/30/fsm/">
+
+
+
+
+
+  <title>fsm | 南山有桑,北山有杨</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">南山有桑,北山有杨</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">高山仰止,景行行止<br>虽不能至,然心向往之。</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/30/fsm/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="theStar">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/logo.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="南山有桑,北山有杨">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">fsm</h1>
+        
+
+        <div class="post-meta">
+                
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-06-30T11:21:07+08:00">
+                2019-06-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/06/30/fsm/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/06/30/fsm/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  1.5k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  8
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>fsm(finite-state machine，缩写：FSM）又称有限状态自动机，简称状态机，是表示有限个状态以及在这些状态之间的转移和动作等行为的数学模型。一直比
+较喜欢使用状态机来撸业务。而且看了下新公司的代码，各种状态定义，迁移，感觉也比较适合用状态机。便开始搜索第三方的的fsm库。发现了了两个库 django-fsm和transitions。
+便打算选一个加入到项目中去。</p>
+<a id="more"></a>
+<h3 id="django-fsm"><a class="header-anchor" href="#django-fsm"></a>django-fsm</h3>
+<p>之前一直用 大神基于transitions写的sqlalchemy model的状态机，看django-fsm的文档的时候，发现django-fsm没有一些钩子函数，不符合个人使用习惯，
+于是稍微改了一下，加入before, 和 after两个钩子函数， 同时通过变量配置状态机。代码如下。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.db <span class="keyword">import</span> models</span><br><span class="line"><span class="keyword">from</span> django.db.models.base <span class="keyword">import</span> ModelBase</span><br><span class="line"><span class="keyword">from</span> django_fsm <span class="keyword">import</span> transition, FSMField</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Transition</span><span class="params">(object)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, field, trigger, source, target,</span></span></span><br><span class="line"><span class="function"><span class="params">                 before=None, after=None, on_error=None,</span></span></span><br><span class="line"><span class="function"><span class="params">                 conditions=None, permission=None, custom=None)</span>:</span></span><br><span class="line">        self.field = field</span><br><span class="line">        self.trigger = trigger</span><br><span class="line">        self.source = source</span><br><span class="line">        self.target = target</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> isinstance(before, list):</span><br><span class="line">            self.before = before</span><br><span class="line">        <span class="keyword">elif</span> isinstance(before, str):</span><br><span class="line">            self.before = [before]</span><br><span class="line">        <span class="keyword">elif</span> before <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            self.before = []</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">raise</span> TypeError(<span class="string">"before param must be str or list"</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> isinstance(after, list):</span><br><span class="line">            self.after = after</span><br><span class="line">        <span class="keyword">elif</span> isinstance(after, str):</span><br><span class="line">            self.after = [after] <span class="keyword">if</span> after <span class="keyword">else</span> []</span><br><span class="line">        <span class="keyword">elif</span> after <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            self.after = []</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">raise</span> TypeError(<span class="string">"after param must be str or list"</span>)</span><br><span class="line"></span><br><span class="line">        self.on_error = on_error <span class="keyword">if</span> on_error <span class="keyword">else</span> []</span><br><span class="line">        self.conditions = conditions <span class="keyword">if</span> conditions <span class="keyword">else</span> []</span><br><span class="line">        self.permission = permission</span><br><span class="line">        self.custom = custom <span class="keyword">if</span> custom <span class="keyword">else</span> dict()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">as_django_fsm_dict</span><span class="params">(self)</span>:</span></span><br><span class="line">        attrs = [<span class="string">"source"</span>, <span class="string">"target"</span>, <span class="string">"on_error"</span>, <span class="string">"conditions"</span>, <span class="string">"permission"</span>, <span class="string">"custom"</span>]</span><br><span class="line">        <span class="keyword">return</span> &#123;field: getattr(self, field) <span class="keyword">for</span> field <span class="keyword">in</span> attrs&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FSMMetaClass</span><span class="params">(ModelBase)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__new__</span><span class="params">(mcs, name, bases, attrs, **kwargs)</span>:</span></span><br><span class="line">        new_class = ModelBase.__new__(mcs, name, bases, attrs, **kwargs)</span><br><span class="line">        states = attrs.get(<span class="string">"__states__"</span>, <span class="literal">None</span>)</span><br><span class="line">        transitions = attrs.get(<span class="string">"__transitions__"</span>, <span class="literal">None</span>)</span><br><span class="line">        transitions = transitions <span class="keyword">or</span> []</span><br><span class="line">        field = getattr(new_class, <span class="string">'status'</span>).field</span><br><span class="line">        <span class="keyword">for</span> t <span class="keyword">in</span> transitions:</span><br><span class="line">            tran = Transition(field=field, **t)</span><br><span class="line"></span><br><span class="line">            <span class="keyword">assert</span> tran.target <span class="keyword">in</span> states, <span class="string">'%s not in __states__'</span> % tran.target</span><br><span class="line">            <span class="keyword">assert</span> tran.source <span class="keyword">in</span> states, <span class="string">'%s not in __states__'</span> % tran.source</span><br><span class="line"></span><br><span class="line">            <span class="function"><span class="keyword">def</span> <span class="title">trigger</span><span class="params">(self, **kwargs)</span>:</span></span><br><span class="line">                <span class="keyword">pass</span></span><br><span class="line">            trigger.__name__ = tran.trigger</span><br><span class="line">            trigger_func = transition(field=field, **tran.as_django_fsm_dict())(trigger)</span><br><span class="line">            setattr(new_class, tran.trigger, trigger_func)</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> callback <span class="keyword">in</span> tran.after:</span><br><span class="line">                <span class="keyword">assert</span> hasattr(new_class, callback), <span class="string">"%s has attribute %s"</span> % (new_class.__name__, callback)</span><br><span class="line">                <span class="keyword">assert</span> callable(getattr(new_class, callback)), <span class="string">"%s must be a method"</span> % callback</span><br><span class="line"></span><br><span class="line">            setattr(trigger_func, <span class="string">"_after_callbacks"</span>, tran.after)</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> callback <span class="keyword">in</span> tran.before:</span><br><span class="line">                <span class="keyword">assert</span> hasattr(new_class, callback), <span class="string">"%s has attribute %s"</span> % (new_class.__name__, callback)</span><br><span class="line">                <span class="keyword">assert</span> callable(getattr(new_class, callback)), <span class="string">"%s must be a method"</span> % callback</span><br><span class="line"></span><br><span class="line">            setattr(trigger_func, <span class="string">"_before_callbacks"</span>, tran.before)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> new_class</span><br><span class="line">        </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FSMModel</span><span class="params">(models.Model, metaclass=FSMMetaClass)</span>:</span></span><br><span class="line">    __abstract__ = <span class="literal">True</span></span><br><span class="line">    __states__ = <span class="literal">None</span></span><br><span class="line">    __transitions__ = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    status = FSMField(default=<span class="string">'solid'</span>)</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></span><br><span class="line">        abstract = <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+<p>信号注册</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django_fsm <span class="keyword">import</span> pre_transition, post_transition</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">pre_transition_connect</span><span class="params">(*args, **kwargs)</span>:</span></span><br><span class="line">    <span class="keyword">import</span> ipdb</span><br><span class="line">    ipdb.set_trace()</span><br><span class="line">    trigger_name = kwargs.get(<span class="string">"name"</span>)</span><br><span class="line">    instance = kwargs.get(<span class="string">"instance"</span>)</span><br><span class="line">    trigger_func = getattr(instance, trigger_name)</span><br><span class="line">    before_callbacks = getattr(trigger_func, <span class="string">"_before_callbacks"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> pre_callback_name <span class="keyword">in</span> before_callbacks:</span><br><span class="line">        pre_callback = getattr(instance, pre_callback_name)</span><br><span class="line">        pre_callback(*kwargs.get(<span class="string">"method_args"</span>), **kwargs.get(<span class="string">"method_kwargs"</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">pre_transition.connect(pre_transition_connect)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">post_transition_connect</span><span class="params">(*args, **kwargs)</span>:</span></span><br><span class="line">    <span class="keyword">import</span> ipdb</span><br><span class="line">    ipdb.set_trace()</span><br><span class="line">    trigger_name = kwargs.get(<span class="string">"name"</span>)</span><br><span class="line">    instance = kwargs.get(<span class="string">"instance"</span>)</span><br><span class="line">    trigger_func = getattr(instance, trigger_name)</span><br><span class="line">    after_callbacks = getattr(trigger_func, <span class="string">"_after_callbacks"</span>)</span><br><span class="line">    <span class="keyword">for</span> post_callback_name <span class="keyword">in</span> after_callbacks:</span><br><span class="line">        post_callback = getattr(instance, post_callback_name)</span><br><span class="line">        post_callback(*kwargs.get(<span class="string">"method_args"</span>), **kwargs.get(<span class="string">"method_kwargs"</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">post_transition.connect(post_transition_connect)</span><br></pre></td></tr></table></figure>
+<p>思路如下</p>
+<ul>
+<li>通过metaclass,根据__transitions__这个变量动态为model添加transitions。</li>
+<li>在trigger中引入两个_after_callbacks，和 _before_callbacks 两个变量，django-fsm的信号触发在这个变量中的函数</li>
+</ul>
+<h3 id="django-model-with-transitions"><a class="header-anchor" href="#django-model-with-transitions"></a>django model with transitions</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> List</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> django.core.exceptions <span class="keyword">import</span> ObjectDoesNotExist</span><br><span class="line"><span class="keyword">from</span> django.db <span class="keyword">import</span> models</span><br><span class="line"><span class="keyword">from</span> django.db.models.fields.related_descriptors <span class="keyword">import</span> ReverseOneToOneDescriptor</span><br><span class="line"><span class="keyword">from</span> transitions.extensions <span class="keyword">import</span> HierarchicalMachine <span class="keyword">as</span> Machine</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># Create your models here.</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">StateMachineModel</span><span class="params">(models.Model)</span>:</span></span><br><span class="line">    __states__ = (</span><br><span class="line">        (<span class="string">'initial'</span>, <span class="string">"Initial"</span>),</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    __transitions__ = []  <span class="comment"># transitions</span></span><br><span class="line">    __state_children_mapping__ = dict()  <span class="comment"># state name, rel</span></span><br><span class="line">    __initial_state__ = <span class="string">'pending'</span>  <span class="comment"># init state</span></span><br><span class="line"></span><br><span class="line">    status = models.CharField(max_length=<span class="number">32</span>, verbose_name=<span class="string">"Status"</span>, default=<span class="string">'initial'</span>, choices=__states__)</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></span><br><span class="line">        abstract = <span class="literal">True</span></span><br><span class="line"></span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">state</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.status</span><br><span class="line"></span><br><span class="line"><span class="meta">    @state.setter</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">state</span><span class="params">(self, value)</span>:</span></span><br><span class="line">        self.status = value</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, *args, **kwargs)</span>:</span></span><br><span class="line">        super(StateMachineModel, self).__init__(*args, **kwargs)</span><br><span class="line">        machine = Machine(model=self,</span><br><span class="line">                          states=self._get_init_states(),</span><br><span class="line">                          transitions=self._get_init_transitions(),</span><br><span class="line">                          initial=self.get_initial_state())</span><br><span class="line">        <span class="keyword">for</span> s, rel <span class="keyword">in</span> self.__state_children_mapping__.items():</span><br><span class="line">            machine.on_enter(s, <span class="keyword">lambda</span> *args, **kwargs: self._init_obj_for_state(rel=rel))</span><br><span class="line">        setattr(self, <span class="string">'fsm'</span>, machine)</span><br><span class="line">        setattr(self, <span class="string">"fsm"</span>, machine)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_innit_obj_for_state</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_initial_state</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> self.status <span class="keyword">not</span> <span class="keyword">in</span> self._get_states():</span><br><span class="line">            <span class="keyword">return</span> self.__initial_state__</span><br><span class="line">        <span class="keyword">return</span> self.status</span><br><span class="line"></span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_states</span><span class="params">(cls)</span> -&gt; List:</span></span><br><span class="line">        <span class="keyword">return</span> list(dict(cls.__states__).keys())[:]</span><br><span class="line"></span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_get_states</span><span class="params">(cls)</span>:</span></span><br><span class="line">        states = cls.get_states()</span><br><span class="line">        <span class="keyword">for</span> state, rel_name <span class="keyword">in</span> cls.__state_children_mapping__.items():</span><br><span class="line">            _descriptor = getattr(cls, rel_name)</span><br><span class="line">            <span class="keyword">assert</span> isinstance(_descriptor, ReverseOneToOneDescriptor), <span class="string">'%s must be onetoone field'</span> % rel_name</span><br><span class="line">            child_model = _descriptor.related.field.model</span><br><span class="line">            <span class="keyword">for</span> child_state <span class="keyword">in</span> child_model.get_states():</span><br><span class="line">                states.append(<span class="string">"%s_%s"</span> % (state, child_state))</span><br><span class="line">        <span class="keyword">return</span> states</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_get_init_states</span><span class="params">(self)</span>:</span></span><br><span class="line">        states = self.get_states()</span><br><span class="line">        _cls = type(self)</span><br><span class="line">        <span class="keyword">for</span> state, rel_name <span class="keyword">in</span> self.__state_children_mapping__.items():</span><br><span class="line">            states.remove(state)</span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                obj = getattr(self, rel_name)</span><br><span class="line">            <span class="keyword">except</span> ObjectDoesNotExist <span class="keyword">as</span> e:</span><br><span class="line">                relation = getattr(_cls, rel_name)</span><br><span class="line">                <span class="keyword">assert</span> isinstance(relation, ReverseOneToOneDescriptor), <span class="string">'%s must be onetoone field'</span> % rel_name</span><br><span class="line">                remote_model = relation.related.field.model</span><br><span class="line">                <span class="keyword">assert</span> issubclass(remote_model, StateMachineModel), <span class="string">"%s must be an StateMachineModel"</span> % remote_model.__name__</span><br><span class="line">                obj = remote_model()</span><br><span class="line">                setattr(obj, _cls.__name__, self)</span><br><span class="line">            state_dict = &#123;<span class="string">"name"</span>: state, <span class="string">"children"</span>: obj.fsm&#125;</span><br><span class="line">            states.append(state_dict)</span><br><span class="line">        <span class="keyword">return</span> states</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_get_init_transitions</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.__transitions__</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Client</span><span class="params">(StateMachineModel)</span>:</span></span><br><span class="line"></span><br><span class="line">    __states__ = (</span><br><span class="line">        (<span class="string">"pending"</span>, <span class="string">"Pending"</span>),</span><br><span class="line">        (<span class="string">"active"</span>, <span class="string">"Active"</span>),</span><br><span class="line">        (<span class="string">"good"</span>, <span class="string">"Good"</span>),</span><br><span class="line">        (<span class="string">"fraud"</span>, <span class="string">"Fraud"</span>),</span><br><span class="line">        (<span class="string">"deleted"</span>, <span class="string">"deleted"</span>),</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    __transitions__ = [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">"trigger"</span>: <span class="string">"activate"</span>,</span><br><span class="line">            <span class="string">"source"</span>: <span class="string">"pending"</span>,</span><br><span class="line">            <span class="string">"dest"</span>: <span class="string">"active"</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">"trigger"</span>: <span class="string">"mark_as_good"</span>,</span><br><span class="line">            <span class="string">"source"</span>: <span class="string">"active"</span>,</span><br><span class="line">            <span class="string">"dest"</span>: <span class="string">"good"</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">"trigger"</span>: <span class="string">"mark_as_fraud"</span>,</span><br><span class="line">            <span class="string">"source"</span>: <span class="string">"active"</span>,</span><br><span class="line">            <span class="string">"dest"</span>: <span class="string">"fraud"</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">"trigger"</span>: <span class="string">"delete_state"</span>,</span><br><span class="line">            <span class="string">"source"</span>: <span class="string">"*"</span>,</span><br><span class="line">            <span class="string">"dest"</span>: <span class="string">"deleted"</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">"trigger"</span>: <span class="string">"do_nothing"</span>,</span><br><span class="line">            <span class="string">"source"</span>: <span class="string">"pending"</span>,</span><br><span class="line">            <span class="string">"dest"</span>: <span class="string">"pending"</span></span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line"></span><br><span class="line">    __state_children_mapping__ = &#123;</span><br><span class="line">        <span class="string">"good"</span>: <span class="string">'client_ask_for_leave_sub_flow'</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">after_activate</span><span class="params">(self, *args, **kwargs)</span>:</span></span><br><span class="line">        print(<span class="string">"a huge improvement! We have another customer"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">after_fraud</span><span class="params">(self, *args, **kwargs)</span>:</span></span><br><span class="line">        print(<span class="string">"suspend app!!!"</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ClientAskForLeaveSubFlow</span><span class="params">(StateMachineModel)</span>:</span></span><br><span class="line">    user = models.OneToOneField(Client, related_name=<span class="string">"client_ask_for_leave_sub_flow"</span>, on_delete=models.CASCADE)</span><br><span class="line"></span><br><span class="line">    __states__ = (</span><br><span class="line">        (<span class="string">'initial'</span>, <span class="string">"Initial"</span>),</span><br><span class="line">        (<span class="string">"processing"</span>, <span class="string">"Processing"</span>),</span><br><span class="line">        (<span class="string">"success"</span>, <span class="string">"Success"</span>),</span><br><span class="line">        (<span class="string">"failed"</span>, <span class="string">"Failed"</span>),</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    __transitions__ = [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">"trigger"</span>: <span class="string">"ask_for_leave"</span>,</span><br><span class="line">            <span class="string">"source"</span>: <span class="string">"initial"</span>,</span><br><span class="line">            <span class="string">"dest"</span>: <span class="string">"processing"</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">"trigger"</span>: <span class="string">"approve"</span>,</span><br><span class="line">            <span class="string">"source"</span>: <span class="string">"processing"</span>,</span><br><span class="line">            <span class="string">"dest"</span>: <span class="string">"success"</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">"trigger"</span>: <span class="string">"reject"</span>,</span><br><span class="line">            <span class="string">"source"</span>: <span class="string">"processing"</span>,</span><br><span class="line">            <span class="string">"dest"</span>: <span class="string">"failed"</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">    ]</span><br></pre></td></tr></table></figure>
+<h3 id="sqlalchemy-model-with-transitions"><a class="header-anchor" href="#sqlalchemy-model-with-transitions"></a>sqlalchemy model with transitions</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sqlalchemy.orm.attributes <span class="keyword">import</span> InstrumentedAttribute</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> aggregation <span class="keyword">import</span> db</span><br><span class="line"><span class="keyword">from</span> transitions.extensions <span class="keyword">import</span> HierarchicalMachine <span class="keyword">as</span> Machine</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">StateMachineModel</span><span class="params">(db.Model)</span>:</span></span><br><span class="line">    __abstract__ = <span class="literal">True</span></span><br><span class="line"></span><br><span class="line">    __states__ = []</span><br><span class="line">    __transitions__ = []</span><br><span class="line">    __state_children_mapping__ = &#123;&#125;</span><br><span class="line"></span><br><span class="line">    status = db.Column(db.SmallInteger, index=<span class="literal">True</span>, default=<span class="number">0</span>, nullable=<span class="literal">False</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">state</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.status</span><br><span class="line"></span><br><span class="line"><span class="meta">    @state.setter</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">state</span><span class="params">(self, value)</span>:</span></span><br><span class="line">        self.status = value</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,*args, **kwargs)</span>:</span></span><br><span class="line">        super(StateMachineModel, self).__init__(*args,**kwargs)</span><br><span class="line"></span><br><span class="line">        initial = self._get_initial()</span><br><span class="line"></span><br><span class="line">        machine = Machine(model=self,</span><br><span class="line">                          states=self._get_states(),</span><br><span class="line">                          transitions=self.get_transitions(),</span><br><span class="line">                          auto_transitions=<span class="literal">False</span>,</span><br><span class="line">                          initial=initial,</span><br><span class="line">                          send_event=<span class="literal">True</span>)</span><br><span class="line">        self.fsm = machine</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_states</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self.__states__[:]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_get_initial</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> self.status <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            self.status = <span class="number">0</span></span><br><span class="line">        initial = dict(self.get_states()).get(self.status)</span><br><span class="line">        <span class="keyword">if</span> initial <span class="keyword">in</span> self.__state_children_mapping__:</span><br><span class="line">            rel_obj = getattr(self, self.__state_children_mapping__[initial])</span><br><span class="line">            initial = <span class="string">'%s_%s'</span> % (initial, rel_obj.state)</span><br><span class="line">        <span class="keyword">return</span> initial</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_get_states</span><span class="params">(self)</span>:</span></span><br><span class="line">        states_dict = dict(self.get_states())</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> key, value <span class="keyword">in</span> self.__state_children_mapping__.items():</span><br><span class="line">            child_obj = getattr(self, value)</span><br><span class="line">            state_key = dict((y, x) <span class="keyword">for</span> (x, y) <span class="keyword">in</span> self.get_states())[key]</span><br><span class="line">            <span class="keyword">if</span> child_obj:</span><br><span class="line">                <span class="comment"># 当子状态机已存在, 整合子状态机状态</span></span><br><span class="line">                states_dict[state_key] = &#123;</span><br><span class="line">                    <span class="string">'name'</span>: key,</span><br><span class="line">                    <span class="string">'children'</span>: child_obj.fsm,</span><br><span class="line">                &#125;</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="comment"># 当子状态机不存在，生成一个空对象，表示初始状态</span></span><br><span class="line">                child_relation = getattr(self.__class__, value)</span><br><span class="line">                <span class="keyword">assert</span> isinstance(child_relation, InstrumentedAttribute)</span><br><span class="line">                target_class = child_relation.prop.mapper.class_</span><br><span class="line">                <span class="keyword">assert</span> issubclass(target_class, StateMachineModel)</span><br><span class="line">                states_dict[state_key] = &#123;</span><br><span class="line">                    <span class="string">'name'</span>: key,</span><br><span class="line">                    <span class="string">'children'</span>: target_class().fsm,</span><br><span class="line">                &#125;</span><br><span class="line">        print(states_dict)</span><br><span class="line">        states = states_dict.values()</span><br><span class="line">        <span class="keyword">return</span> list(states)</span><br><span class="line"></span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_transitions</span><span class="params">(cls)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> cls.__transitions__[:]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_init_obj_for_state</span><span class="params">(self, rel)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> getattr(self, rel, <span class="literal">None</span>):</span><br><span class="line">            class_ = getattr(self.__class__, rel).prop.mapper.class_</span><br><span class="line">            obj = class_()</span><br><span class="line">            db.session.add(obj)</span><br><span class="line">            setattr(self, rel, obj)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">StateMachineClient</span><span class="params">(StateMachineModel)</span>:</span></span><br><span class="line"></span><br><span class="line">    id = db.Column(db.Integer, primary_key=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">    __states__ = (</span><br><span class="line">        (<span class="number">0</span>, <span class="string">"initial"</span>),</span><br><span class="line">        (<span class="number">1000</span>, <span class="string">"pending"</span>),</span><br><span class="line">        (<span class="number">1001</span>, <span class="string">"active"</span>),</span><br><span class="line">        (<span class="number">1002</span>, <span class="string">"good"</span>),</span><br><span class="line">        (<span class="number">1003</span>, <span class="string">"fraud"</span>),</span><br><span class="line">        (<span class="number">1004</span>, <span class="string">"deleted"</span>),</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    __transitions__ = [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">"trigger"</span>: <span class="string">"initialize"</span>,</span><br><span class="line">            <span class="string">"source"</span>: <span class="string">"initial"</span>,</span><br><span class="line">            <span class="string">"dest"</span>: <span class="string">"pending"</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">"trigger"</span>: <span class="string">"activate"</span>,</span><br><span class="line">            <span class="string">"source"</span>: <span class="string">"pending"</span>,</span><br><span class="line">            <span class="string">"dest"</span>: <span class="string">"active"</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">"trigger"</span>: <span class="string">"mark_as_good"</span>,</span><br><span class="line">            <span class="string">"source"</span>: <span class="string">"active"</span>,</span><br><span class="line">            <span class="string">"dest"</span>: <span class="string">"good"</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">"trigger"</span>: <span class="string">"mark_as_fraud"</span>,</span><br><span class="line">            <span class="string">"source"</span>: <span class="string">"active"</span>,</span><br><span class="line">            <span class="string">"dest"</span>: <span class="string">"fraud"</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">"trigger"</span>: <span class="string">"delete_state"</span>,</span><br><span class="line">            <span class="string">"source"</span>: <span class="string">"*"</span>,</span><br><span class="line">            <span class="string">"dest"</span>: <span class="string">"deleted"</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">"trigger"</span>: <span class="string">"do_nothing"</span>,</span><br><span class="line">            <span class="string">"source"</span>: <span class="string">"pending"</span>,</span><br><span class="line">            <span class="string">"dest"</span>: <span class="string">"pending"</span></span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line"></span><br><span class="line">    __state_children_mapping__ = &#123;</span><br><span class="line">        <span class="string">"good"</span>: <span class="string">'client_ask_for_leave_sub_flow'</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">after_activate</span><span class="params">(self, *args, **kwargs)</span>:</span></span><br><span class="line">        print(<span class="string">"a huge improvement! We have another customer"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">after_fraud</span><span class="params">(self, *args, **kwargs)</span>:</span></span><br><span class="line">        print(<span class="string">"suspend app!!!"</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ClientAskForLeaveSubFlow</span><span class="params">(StateMachineModel)</span>:</span></span><br><span class="line">    id = db.Column(db.Integer, primary_key=<span class="literal">True</span>)</span><br><span class="line">    client_id = db.Column(db.Integer, db.ForeignKey(<span class="string">'state_machine_client.id'</span>), unique=<span class="literal">True</span>)</span><br><span class="line">    user = db.relationship(StateMachineClient, backref=db.backref(<span class="string">"client_ask_for_leave_sub_flow"</span>, uselist=<span class="literal">False</span>))</span><br><span class="line"></span><br><span class="line">    __states__ = (</span><br><span class="line">        (<span class="number">0</span>, <span class="string">"initial"</span>),</span><br><span class="line">        (<span class="number">1001</span>, <span class="string">"processing"</span>),</span><br><span class="line">        (<span class="number">1002</span>, <span class="string">"success"</span>),</span><br><span class="line">        (<span class="number">1003</span>, <span class="string">"failed"</span>),</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    __transitions__ = [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">"trigger"</span>: <span class="string">"ask_for_leave"</span>,</span><br><span class="line">            <span class="string">"source"</span>: <span class="string">"initial"</span>,</span><br><span class="line">            <span class="string">"dest"</span>: <span class="string">"processing"</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">"trigger"</span>: <span class="string">"approve"</span>,</span><br><span class="line">            <span class="string">"source"</span>: <span class="string">"processing"</span>,</span><br><span class="line">            <span class="string">"dest"</span>: <span class="string">"success"</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">"trigger"</span>: <span class="string">"reject"</span>,</span><br><span class="line">            <span class="string">"source"</span>: <span class="string">"processing"</span>,</span><br><span class="line">            <span class="string">"dest"</span>: <span class="string">"failed"</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">    ]</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/sqlalchemy/" rel="tag"># sqlalchemy</a>
+          
+            <a href="/tags/fsm/" rel="tag"># fsm</a>
+          
+            <a href="/tags/django/" rel="tag"># django</a>
+          
+            <a href="/tags/python-metaclass/" rel="tag"># python-metaclass</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/08/常见问题/" rel="next" title="常见问题">
+                <i class="fa fa-chevron-left"></i> 常见问题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/08/15/shell/shell入门/" rel="prev" title="shell入门">
+                shell入门 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/logo.png" alt="theStar">
+          <p class="site-author-name" itemprop="name">theStar</p>
+           
+              <p class="site-description motion-element" itemprop="description">下笔时的思绪 落在了树的荫</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#django-fsm"><span class="nav-number">1.</span> <span class="nav-text">django-fsm</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#django-model-with-transitions"><span class="nav-number">2.</span> <span class="nav-text">django model with transitions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sqlalchemy-model-with-transitions"><span class="nav-number">3.</span> <span class="nav-text">sqlalchemy model with transitions</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">theStar</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://ismewen.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://yoursite.com/2019/06/30/fsm/';
+          this.page.identifier = '2019/06/30/fsm/';
+          this.page.title = 'fsm';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://ismewen.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

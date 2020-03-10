@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="flask,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2">
+
+
+
+
+
+
+<meta name="description" content="app context . 当前激活程序的程序实例，可以通过current_app获得，要注意的是，在非web tuntime的时候需要手动激活程序上下文">
+<meta name="keywords" content="flask">
+<meta property="og:type" content="article">
+<meta property="og:title" content="flask context">
+<meta property="og:url" content="http://yoursite.com/2019/04/02/flask/flask-context/index.html">
+<meta property="og:site_name" content="南山有桑,北山有杨">
+<meta property="og:description" content="app context . 当前激活程序的程序实例，可以通过current_app获得，要注意的是，在非web tuntime的时候需要手动激活程序上下文">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/flask_context-1.png">
+<meta property="og:updated_time" content="2020-03-10T00:55:40.899Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="flask context">
+<meta name="twitter:description" content="app context . 当前激活程序的程序实例，可以通过current_app获得，要注意的是，在非web tuntime的时候需要手动激活程序上下文">
+<meta name="twitter:image" content="http://yoursite.com/images/flask_context-1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/04/02/flask/flask-context/">
+
+
+
+
+
+  <title>flask context | 南山有桑,北山有杨</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">南山有桑,北山有杨</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">高山仰止,景行行止<br>虽不能至,然心向往之。</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/02/flask/flask-context/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="theStar">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/logo.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="南山有桑,北山有杨">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">flask context</h1>
+        
+
+        <div class="post-meta">
+                
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-02T22:36:12+08:00">
+                2019-04-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/04/02/flask/flask-context/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/04/02/flask/flask-context/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  1.4k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  6
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="app-context"><a class="header-anchor" href="#app-context"></a>app context</h3>
+<p>. 当前激活程序的程序实例，可以通过current_app获得，要注意的是，在非web tuntime的时候需要手动激活程序上下文</p>
+<a id="more"></a>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, current_app</span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line"><span class="keyword">with</span> app.app_context():</span><br><span class="line">    <span class="comment"># within this block, current_app points to app.</span></span><br><span class="line">    print(current_app.name)</span><br><span class="line">    <span class="keyword">assert</span> current_app.name==app.name</span><br></pre></td></tr></table></figure>
+<h3 id="app-context-的作用"><a class="header-anchor" href="#app-context-的作用"></a>app context 的作用</h3>
+<p>. 避免显示的到处传递app</p>
+<p>. 多应用的支持，一个application 中存在多个 flask app</p>
+<h3 id="context的生命周期"><a class="header-anchor" href="#context的生命周期"></a>context的生命周期</h3>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">The application context is created and destroyed as necessary. When a Flask application begins handling a request, it pushes an application context and a request context. When the request ends it pops the request context then the application context. Typically, an application context will have the same lifetime as a request.</span><br><span class="line">大概意思是app context 根据需要创建和销毁。当app开始处理一个请求的时候，会压入一个app context 和 request context,请求处理结束的时候，弹出app context和request context</span><br><span class="line">那么问题来了？app context 和 requst context 压入到哪里去了呢？这个等下再讲。</span><br></pre></td></tr></table></figure>
+<h3 id="app-context-多应用代码示例"><a class="header-anchor" href="#app-context-多应用代码示例"></a>app context 多应用代码示例</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">app = Flask(<span class="string">'debug'</span>)</span><br><span class="line">app2 = Flask(<span class="string">"nested debug"</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route('/say_hello')</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">debug_say_hello</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">'dubug app say hello to you'</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@app2.route('/say_hello')</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">neseted_say_hello</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">'nested app say hello to you'</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># print("before enter debug env", current_app) 没有app上下文的时候不能使用current_app</span></span><br><span class="line"><span class="keyword">with</span> app.app_context():</span><br><span class="line">    print(<span class="string">"after enter debug env"</span>, current_app)</span><br><span class="line">    print(<span class="string">"======== ======"</span>)</span><br><span class="line">    print(<span class="string">"before enter nested debug env"</span>, current_app)</span><br><span class="line">    <span class="keyword">with</span> app2.app_context():</span><br><span class="line">        print(<span class="string">"after enter nested debug env"</span>, current_app)</span><br><span class="line"></span><br><span class="line">mounts = &#123;</span><br><span class="line">    <span class="string">"/nested_debug"</span>: app2</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">m = DispatcherMiddleware(app, mounts=mounts)</span><br><span class="line"></span><br><span class="line">run_simple(<span class="string">'localhost'</span>, <span class="number">5000</span>, m)</span><br></pre></td></tr></table></figure>
+<p>浏览器访问以下，结果如下图所示，成功建立了多应用环境
+　<img src="/images/flask_context-1.png" alt></p>
+<h3 id="request-context"><a class="header-anchor" href="#request-context"></a>request context</h3>
+<p>在收到客户端请求的时候，会生成一个请求对象，该对象封装了一些请求信息。如果没有请求上下文，view 函数想要访问请求对象，只能当做参数传进
+到视图函数。在多线程服务器中，多个线程会同时处理多个请求，每个线程看到的请求对象都不同。flask使用上下文 让 request 指向请求对象，且在这个线程
+内 全局访问，这样就避免了到处显示传递参数了。意思就是，虽然不同的线程会存在不同的请求对象，但是对线程来说， request 指向的是当前线程正在处理的
+请求对象，在当前请求的任何地方都能访问修改它，不会影响到其他的线程。</p>
+<h3 id="some-hook"><a class="header-anchor" href="#some-hook"></a>some hook</h3>
+<p>有时候处理请求的时候，我们需要在请求处理开始，处理结束时的时候 做某些事情，可以通过requst hook完成。
+四种基本的 hook
+. before_first_request 注册一个函数，在处理第一个请求之前执行
+. before_request 注册一个函数，在每次请求之前执行
+. after_request 注册一个函数，如果没有未处理异常，在每次请求之后执行
+. teardown_request 注册一个函数, 即使存在未处理的异常，也会在每次请求之后执行
+针对某次请求的 hook, after_this_request 为当前请求注册一个函数，当前请求结束后，执行</p>
+<p>代码示例</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@app.before_first_request</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">app_before_first_request</span><span class="params">()</span>:</span></span><br><span class="line">    print(<span class="string">"app before frist request"</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.before_request</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">app_before_request</span><span class="params">()</span>:</span></span><br><span class="line">    print(<span class="string">'app before request'</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.after_request</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">app_after_request</span><span class="params">(response)</span>:</span></span><br><span class="line">    print(<span class="string">'hi, app after request'</span>)</span><br><span class="line">    <span class="keyword">return</span> Response(<span class="string">"hi, app after request"</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.teardown_request</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">app_teardown_request</span><span class="params">(exc)</span>:</span></span><br><span class="line">    print(<span class="string">'app teardown request'</span>)</span><br><span class="line">    <span class="keyword">return</span> Response(<span class="string">'hi, app teardown request'</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route('/')</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">()</span>:</span></span><br><span class="line"><span class="meta">    @after_this_request</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">after_current_request</span><span class="params">(response)</span>:</span></span><br><span class="line">        print(<span class="string">"hi, after current request"</span>)</span><br><span class="line">        <span class="keyword">return</span> Response(<span class="string">'hi, after current request'</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="string">'this is index page'</span></span><br></pre></td></tr></table></figure>
+<p>访问index页面的print 如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">### first request</span><br><span class="line">app before frist request</span><br><span class="line">app before request</span><br><span class="line">hi, after current request</span><br><span class="line">hi, app after request</span><br><span class="line">app teardown request</span><br><span class="line"></span><br><span class="line">### second request</span><br><span class="line">app before request</span><br><span class="line">hi, after current request</span><br><span class="line">hi, app after request</span><br><span class="line">app teardown request</span><br></pre></td></tr></table></figure>
+<h3 id="request-context-的实现原理"><a class="header-anchor" href="#request-context-的实现原理"></a>request context 的实现原理</h3>
+<p>主要是通过Werkzeug库中local模块实现</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> werkzeug <span class="keyword">import</span> local</span><br></pre></td></tr></table></figure>
+<h4 id="local类的介绍"><a class="header-anchor" href="#local类的介绍"></a>local类的介绍</h4>
+<p>看下local的源码将会有更深的认识。这里简单介绍一下local类 回答之前的 app context 和 request context 压入到哪里去了呢？
+local类用来存储线程的私有变量.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Local</span><span class="params">(object)</span>:</span></span><br><span class="line">    __slots__ = (<span class="string">"__storage__"</span>, <span class="string">"__ident_func__"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        object.__setattr__(self, <span class="string">"__storage__"</span>, &#123;&#125;)</span><br><span class="line">        object.__setattr__(self, <span class="string">"__ident_func__"</span>, get_ident)</span><br><span class="line">    ...</span><br><span class="line">    </span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">__getattr__</span><span class="params">(self, name)</span>:</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="keyword">return</span> self.__storage__[self.__ident_func__()][name]</span><br><span class="line">        <span class="keyword">except</span> KeyError:</span><br><span class="line">            <span class="keyword">raise</span> AttributeError(name)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__setattr__</span><span class="params">(self, name, value)</span>:</span></span><br><span class="line">        ident = self.__ident_func__()</span><br><span class="line">        storage = self.__storage__</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            storage[ident][name] = value</span><br><span class="line">        <span class="keyword">except</span> KeyError:</span><br><span class="line">            storage[ident] = &#123;name: value&#125;</span><br></pre></td></tr></table></figure>
+<p>Local类有两个属性__storage__ 和 <strong>ident_func</strong>
+关于 <strong>ident_func</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">since each thread has its own greenlet we can just use those as identifiers for the context.  If greenlets are not</span><br><span class="line">available we fall back to the current thread ident depending on where it is.</span><br></pre></td></tr></table></figure>
+<p>总之 __ident__func 当前运行环境的唯一标示。 <strong>ident_func</strong> 就像是一把钥匙。__storage__是各个房间，程序在运行的时候，都会获得一把钥匙。
+往房间里面存东西，拿东西。都会经历两个如下两个步骤
+. 拿着钥匙，进入自己的房间。
+. 在自己的房间 存东西，取东西</p>
+<p>收到一个请求的时候，flask就在你的房间里面建立了一个 名叫 request 的柜子。我们每次引用request变量的时候。都不是直接访问这个柜子，都会经过两个步骤。
+第一步，根据钥匙找到自己的房间。第二步，根据 “request” 这个名字 找到request 的柜子。如果同时收到非常多非常多的请求的时候，每一个request都会不同。
+因为他们的钥匙不同，他们进入到的房间就会不同，访问到的柜子也不同。这样便实现了 request 协程或线程间的全局访问和修改。</p>
+<h4 id="多-app-原理"><a class="header-anchor" href="#多-app-原理"></a>多 app 原理</h4>
+<p>上文说过app 指向的都是当前的app，这又是什么呢？</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">_find_app</span><span class="params">()</span>:</span></span><br><span class="line">    top = _app_ctx_stack.top</span><br><span class="line">    <span class="keyword">if</span> top <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        <span class="keyword">raise</span> RuntimeError(_app_ctx_err_msg)</span><br><span class="line">    <span class="keyword">return</span> top.app</span><br><span class="line"></span><br><span class="line">current_app = LocalProxy(_find_app)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">current_app 指向的都是 _app_ctx_stack 的栈顶。</span><br><span class="line">with app1.context():</span><br><span class="line">    # app1被压入栈顶, current_app 指向 app1</span><br><span class="line">    with app2.context():</span><br><span class="line">        # app2 被压入栈顶，current app 指向app2</span><br><span class="line">    # 退出app2 context, app2从栈弹出，current_app 又指向app1</span><br></pre></td></tr></table></figure>
+<h4 id="other"><a class="header-anchor" href="#other"></a>other</h4>
+<p>理解了local模块，才会更深入的理解flask的context。平时还是得多看源码，吸取别人设计，实现的经验，这点我还做的远远不够。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/flask/" rel="tag"># flask</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/03/10/python/python作用域/" rel="next" title="python作用域">
+                <i class="fa fa-chevron-left"></i> python作用域
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/04/04/sqlalchemy/sqlalchemy之hybrid-property/" rel="prev" title="sqlalchemy之hybrid_property">
+                sqlalchemy之hybrid_property <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/logo.png" alt="theStar">
+          <p class="site-author-name" itemprop="name">theStar</p>
+           
+              <p class="site-description motion-element" itemprop="description">下笔时的思绪 落在了树的荫</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#app-context"><span class="nav-number">1.</span> <span class="nav-text">app context</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#app-context-的作用"><span class="nav-number">2.</span> <span class="nav-text">app context 的作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#context的生命周期"><span class="nav-number">3.</span> <span class="nav-text">context的生命周期</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#app-context-多应用代码示例"><span class="nav-number">4.</span> <span class="nav-text">app context 多应用代码示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#request-context"><span class="nav-number">5.</span> <span class="nav-text">request context</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#some-hook"><span class="nav-number">6.</span> <span class="nav-text">some hook</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#request-context-的实现原理"><span class="nav-number">7.</span> <span class="nav-text">request context 的实现原理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#local类的介绍"><span class="nav-number">7.1.</span> <span class="nav-text">local类的介绍</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多-app-原理"><span class="nav-number">7.2.</span> <span class="nav-text">多 app 原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#other"><span class="nav-number">7.3.</span> <span class="nav-text">other</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">theStar</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://ismewen.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://yoursite.com/2019/04/02/flask/flask-context/';
+          this.page.identifier = '2019/04/02/flask/flask-context/';
+          this.page.title = 'flask context';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://ismewen.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

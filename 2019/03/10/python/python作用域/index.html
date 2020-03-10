@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="python-scope,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2">
+
+
+
+
+
+
+<meta name="description" content="问题背景 python的书籍看不不少，看到作用域的时候都没怎么仔细去看，因为觉得自己已经足够了解了，作用域嘛，简单的很，无非就是，出现一个变量，先看当前作用域里面有木有，木有，有就用当前作用域里面的，木有就去上层作用域去找，直到找到了为止，嘿嘿，虽然就明白了这一点点东西，但是好像在大部分情况下还用的好好的，直到之前写了一个装饰器，遇到了一个百思不得其解的问题，才让我好好审视了一下python的作用">
+<meta name="keywords" content="python-scope">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python作用域">
+<meta property="og:url" content="http://yoursite.com/2019/03/10/python/python作用域/index.html">
+<meta property="og:site_name" content="南山有桑,北山有杨">
+<meta property="og:description" content="问题背景 python的书籍看不不少，看到作用域的时候都没怎么仔细去看，因为觉得自己已经足够了解了，作用域嘛，简单的很，无非就是，出现一个变量，先看当前作用域里面有木有，木有，有就用当前作用域里面的，木有就去上层作用域去找，直到找到了为止，嘿嘿，虽然就明白了这一点点东西，但是好像在大部分情况下还用的好好的，直到之前写了一个装饰器，遇到了一个百思不得其解的问题，才让我好好审视了一下python的作用">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-03-10T03:34:17.528Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="python作用域">
+<meta name="twitter:description" content="问题背景 python的书籍看不不少，看到作用域的时候都没怎么仔细去看，因为觉得自己已经足够了解了，作用域嘛，简单的很，无非就是，出现一个变量，先看当前作用域里面有木有，木有，有就用当前作用域里面的，木有就去上层作用域去找，直到找到了为止，嘿嘿，虽然就明白了这一点点东西，但是好像在大部分情况下还用的好好的，直到之前写了一个装饰器，遇到了一个百思不得其解的问题，才让我好好审视了一下python的作用">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/03/10/python/python作用域/">
+
+
+
+
+
+  <title>python作用域 | 南山有桑,北山有杨</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">南山有桑,北山有杨</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">高山仰止,景行行止<br>虽不能至,然心向往之。</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/10/python/python作用域/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="theStar">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/logo.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="南山有桑,北山有杨">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">python作用域</h1>
+        
+
+        <div class="post-meta">
+                
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-10T22:16:40+08:00">
+                2019-03-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/03/10/python/python作用域/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/03/10/python/python作用域/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  1.5k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  6
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="问题背景"><a class="header-anchor" href="#问题背景"></a>问题背景</h3>
+<p>python的书籍看不不少，看到作用域的时候都没怎么仔细去看，因为觉得自己已经足够了解了，作用域嘛，简单的很，无非就是，出现一个变量，先看当前作用域里面有木有，木有，有就用当前作用域里面的，木有就去上层作用域去找，直到找到了为止，嘿嘿，虽然就明白了这一点点东西，但是好像在大部分情况下还用的好好的，直到之前写了一个装饰器，遇到了一个百思不得其解的问题，才让我好好审视了一下python的作用域，所以记录一下以加深对python作用域的理解。</p>
+<a id="more"></a>
+<h3 id="问题是这样子的"><a class="header-anchor" href="#问题是这样子的"></a>问题是这样子的</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">class_retry_fetch</span><span class="params">(times, errors=<span class="params">(Exception,)</span>, delay=None)</span>:</span> </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">deco</span><span class="params">(func)</span>:</span> <span class="comment"># </span></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">wrapper</span><span class="params">(self, *args, **kwargs)</span>:</span></span><br><span class="line">            is_error = <span class="literal">True</span></span><br><span class="line">            retry_times = times</span><br><span class="line">            <span class="keyword">while</span> retry_times &gt; <span class="number">0</span> <span class="keyword">and</span> is_error:</span><br><span class="line">                <span class="keyword">try</span>:</span><br><span class="line">                    ret = func(self, *args, **kwargs)</span><br><span class="line">                    <span class="keyword">return</span> ret</span><br><span class="line">                <span class="keyword">except</span> errors <span class="keyword">as</span> e:</span><br><span class="line">                    retry_times -= <span class="number">1</span></span><br><span class="line">                    <span class="keyword">if</span> retry_times == <span class="number">0</span>:</span><br><span class="line">                        <span class="keyword">raise</span> e</span><br><span class="line">                    <span class="keyword">if</span> delay <span class="keyword">and</span> isinstance(delay, int):</span><br><span class="line">                        time.sleep(delay)</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> wrapper</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> deco</span><br></pre></td></tr></table></figure>
+<p>同事写了上面一个装饰器,后来新开了一个项目的时候，我复制了这个装饰器，然后觉得times 这个命名不好，于是决定把times改成retry_times,于是我把times 改成了retry_times,再把下面的retry_times=times改去掉了。就变成了下面这个样子。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">class_retry_fetch</span><span class="params">(retry_times, errors=<span class="params">(Exception,)</span>, delay=None)</span>:</span> </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">deco</span><span class="params">(func)</span>:</span> <span class="comment"># </span></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">wrapper</span><span class="params">(self, *args, **kwargs)</span>:</span></span><br><span class="line">            is_error = <span class="literal">True</span></span><br><span class="line">            <span class="keyword">while</span> retry_times &gt; <span class="number">0</span> <span class="keyword">and</span> is_error:</span><br><span class="line">                <span class="keyword">try</span>:</span><br><span class="line">                    ret = func(self, *args, **kwargs)</span><br><span class="line">                    <span class="keyword">return</span> ret</span><br><span class="line">                <span class="keyword">except</span> errors <span class="keyword">as</span> e:</span><br><span class="line">                    retry_times -= <span class="number">1</span></span><br><span class="line">                    <span class="keyword">if</span> retry_times == <span class="number">0</span>:</span><br><span class="line">                        <span class="keyword">raise</span> e</span><br><span class="line">                    <span class="keyword">if</span> delay <span class="keyword">and</span> isinstance(delay, int):</span><br><span class="line">                        time.sleep(delay)</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> wrapper</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> deco</span><br></pre></td></tr></table></figure>
+<p>然后pycharm就提示我unresolved reference ‘retry_times’,我就惊呆了，按照我的理解，最外层上面不是有一个retry_times吗，怎么会找不到了呢？不会是萌萌哒pycharm出问题了吧，于是乎我跑了一下测试用例，结果发现，原来是真的！不是pycharm的问题，是真的找不到retry_times了。和我之前理解的不一样，后来问了一下同事，了解到了global, nonlocal等关键词，仔细查阅了一些资料才明白其中的原理。unresolved reference 'retry_times’这个问题之所以会出现是因为在wrapper函数中 出现了retry_times -= 1，又对retry_times进行赋值操作，retry_times被认为是局部作用域里面。所以而retry_times在wraper函数中未申明过，所以就报错了。要解决这个问题很简单。1，第一种就是把retry_times 在wrapper函数中赋值给另外一个变量other_var，然后修改other_var的值，这样就不会报错了。第二种只能在python3中使用，通过nonlocal关键词进行申明。如下所示。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">class_retry_fetch</span><span class="params">(retry_times, errors=<span class="params">(Exception,)</span>, delay=None)</span>:</span> </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">deco</span><span class="params">(func)</span>:</span> <span class="comment"># </span></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">wrapper</span><span class="params">(self, *args, **kwargs)</span>:</span></span><br><span class="line">            is_error = <span class="literal">True</span></span><br><span class="line">            <span class="keyword">nonlocal</span> retry_times</span><br><span class="line">            <span class="keyword">while</span> retry_times &gt; <span class="number">0</span> <span class="keyword">and</span> is_error:</span><br><span class="line">                <span class="keyword">try</span>:</span><br><span class="line">                    ret = func(self, *args, **kwargs)</span><br><span class="line">                    <span class="keyword">return</span> ret</span><br><span class="line">                <span class="keyword">except</span> errors <span class="keyword">as</span> e:</span><br><span class="line">                    retry_times -= <span class="number">1</span></span><br><span class="line">                    <span class="keyword">if</span> retry_times == <span class="number">0</span>:</span><br><span class="line">                        <span class="keyword">raise</span> e</span><br><span class="line">                    <span class="keyword">if</span> delay <span class="keyword">and</span> isinstance(delay, int):</span><br><span class="line">                        time.sleep(delay)</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> wrapper</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> deco</span><br></pre></td></tr></table></figure>
+<h3 id="legb"><a class="header-anchor" href="#legb"></a>LEGB</h3>
+<p>看了上面的例子，肯定是一脸懵逼的。但是如果理解了LEGB也就完全理解了，上述错误产生的原因，以及怎样改才正确的了。LEGB指的是作用域的查找顺序即，Local-&gt;Enclosing-&gt;Global-&gt;Builtin
+. local: 函数范围内的变量（不完全准确）
+. nonlocal: 外部嵌套函数中的变量
+. global: 模块级别的变量
+. built: 内置的变量例如， map,filter, sum等等
+还是从例子中去理解LEGB规则。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">name = <span class="string">"this"</span> <span class="comment"># @1</span></span><br><span class="line"><span class="keyword">assert</span> <span class="string">"name"</span> <span class="keyword">in</span> globals()</span><br><span class="line"><span class="keyword">assert</span> <span class="string">"name"</span> <span class="keyword">in</span> locals()</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">some_test</span><span class="params">()</span>:</span></span><br><span class="line">    name = <span class="string">"is"</span> <span class="comment"># @2</span></span><br><span class="line">    <span class="keyword">assert</span> <span class="string">"name"</span> <span class="keyword">in</span> globals() </span><br><span class="line">    <span class="keyword">assert</span> <span class="string">"name"</span> <span class="keyword">in</span> locals()</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">hello_world</span><span class="params">()</span>:</span></span><br><span class="line">        <span class="keyword">assert</span> <span class="string">"name"</span> <span class="keyword">in</span> globals()</span><br><span class="line">        <span class="keyword">assert</span> <span class="string">"name"</span> <span class="keyword">in</span> locals()</span><br><span class="line">        name = <span class="string">"my"</span> <span class="comment"># @3</span></span><br><span class="line">print(name)</span><br></pre></td></tr></table></figure>
+<p>对于@1处的name来说，它属于模块级别的变量,能在globals()中直接找找到。
+对于@2处的name来说， 它定义在函数内部，会产生一个局部作用域，它的查找顺序就是 当前的局部作用域Local @2处的name-&gt; 全局作用域Global @1出的name
+对于@3出的name来说，它也定义在函数内部，也会产生一个局部作用域，它的查找顺序就是 当前的局部作用域local @3出的name-&gt;enclosing域中的@2处name-&gt;全局作用域中的@1处的name。
+如果在hello_world中想使用enclosing域中的@2处name，在python2则必须定义一个局部变量 ，把name赋值给这个局部变量，如此便能修改了。在python3中可以使用
+nonlocal 关键字申明name,在hello_world中就可以直接使用了。</p>
+<h3 id="一些面试题详解"><a class="header-anchor" href="#一些面试题详解"></a>一些面试题详解</h3>
+<p>上面是LEGB的基本介绍了，但是感觉说的还是不清不楚的😂,还是通过一些面试题来说具体说明吧。</p>
+<h4 id="面试题一"><a class="header-anchor" href="#面试题一"></a>面试题一</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">name = <span class="string">"wen"</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">some_test</span><span class="params">()</span>:</span></span><br><span class="line">    name += <span class="string">"test"</span></span><br><span class="line">some_test() <span class="comment"># 输出是什么？</span></span><br></pre></td></tr></table></figure>
+<p>没有输出，因为会抛出UnboundLocalError的错误，在some_test函数的作用域中出现了name的申明，name += “test” &lt;&lt;==&gt;&gt; name = name + “test”,而locals()中没有name变量，所以抛出异常。如果要在local作用域中使用global中的变量，可以通过Global关键字，修改如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">name = <span class="string">"wen"</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">some_test</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">assert</span> <span class="string">"name"</span> <span class="keyword">not</span> <span class="keyword">in</span> locals() <span class="comment"># False</span></span><br><span class="line">    <span class="keyword">assert</span> <span class="string">"name"</span> <span class="keyword">in</span> globals() <span class="comment"># True</span></span><br><span class="line">    <span class="keyword">global</span> name <span class="comment"># 使用global中的name 即some test下的name绑定到了global中，</span></span><br><span class="line">    <span class="keyword">assert</span> <span class="string">"name"</span> <span class="keyword">not</span> <span class="keyword">in</span> locals() <span class="comment"># False</span></span><br><span class="line">    name += <span class="string">"test"</span></span><br><span class="line">some_test() <span class="comment"># output: wentest</span></span><br></pre></td></tr></table></figure>
+<h4 id="面试题二"><a class="header-anchor" href="#面试题二"></a>面试题二</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">name = <span class="string">"lzl"</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">f1</span><span class="params">()</span>:</span></span><br><span class="line">    print(name)</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">f2</span><span class="params">()</span>:</span></span><br><span class="line">    name = <span class="string">"eric"</span></span><br><span class="line">    f1()</span><br><span class="line">f2() <span class="comment"># output: lzl</span></span><br></pre></td></tr></table></figure>
+<p>name=“lzl”与f1()在一个作用域链，和代码的定义位置有关系，跟执行位置没有关系。所以name使用的是global中的变量</p>
+<h4 id="面试题三"><a class="header-anchor" href="#面试题三"></a>面试题三</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">li = [<span class="keyword">lambda</span> :x <span class="keyword">for</span> x <span class="keyword">in</span> range(<span class="number">2</span>)]</span><br><span class="line">print(li[<span class="number">0</span>]()) <span class="comment"># output: 2</span></span><br></pre></td></tr></table></figure>
+<p>黄哥Python回答： 由于编程语言延迟求值的特性，在使用延迟求值的时候，表达式不在它被绑定到变量之后就立即求值，而是在该值被取用的时候求值，当调用li<a href>0</a> 函数时，x的值已经是9了，所以输出的是9</p>
+<h3 id="命名空间补充"><a class="header-anchor" href="#命名空间补充"></a>命名空间补充</h3>
+<h3 id="参考"><a class="header-anchor" href="#参考"></a>参考</h3>
+<p>. <a href="http://blog.cipherc.com/2015/04/25/python_namespace_and_scope/#assignment-rule" target="_blank" rel="noopener">Python命名空间和作用域窥探</a>
+. <a href="https://www.zhihu.com/question/29826740" target="_blank" rel="noopener">python 作用域与名称空间?</a>
+. <a href="http://python.jobbole.com/86465/" target="_blank" rel="noopener">Python 五个知识点搞定作用域</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python-scope/" rel="tag"># python-scope</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/25/python/python装饰器/" rel="next" title="python装饰器">
+                <i class="fa fa-chevron-left"></i> python装饰器
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/04/02/flask/flask-context/" rel="prev" title="flask context">
+                flask context <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/logo.png" alt="theStar">
+          <p class="site-author-name" itemprop="name">theStar</p>
+           
+              <p class="site-description motion-element" itemprop="description">下笔时的思绪 落在了树的荫</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#问题背景"><span class="nav-number">1.</span> <span class="nav-text">问题背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题是这样子的"><span class="nav-number">2.</span> <span class="nav-text">问题是这样子的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#legb"><span class="nav-number">3.</span> <span class="nav-text">LEGB</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#一些面试题详解"><span class="nav-number">4.</span> <span class="nav-text">一些面试题详解</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#面试题一"><span class="nav-number">4.1.</span> <span class="nav-text">面试题一</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#面试题二"><span class="nav-number">4.2.</span> <span class="nav-text">面试题二</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#面试题三"><span class="nav-number">4.3.</span> <span class="nav-text">面试题三</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#命名空间补充"><span class="nav-number">5.</span> <span class="nav-text">命名空间补充</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">theStar</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://ismewen.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://yoursite.com/2019/03/10/python/python作用域/';
+          this.page.identifier = '2019/03/10/python/python作用域/';
+          this.page.title = 'python作用域';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://ismewen.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="decorator,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2">
+
+
+
+
+
+
+<meta name="description" content="什么是装饰器？ 装饰器(Decorators)是python的一种咋看起来很难理解的，但其实很容易的语法。它的本质其实是一个函数或者类，可以在不改变原函数的情况下添加新的功能。写个简单例子理解它的实现。">
+<meta name="keywords" content="decorator">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python装饰器">
+<meta property="og:url" content="http://yoursite.com/2018/11/25/python/python装饰器/index.html">
+<meta property="og:site_name" content="南山有桑,北山有杨">
+<meta property="og:description" content="什么是装饰器？ 装饰器(Decorators)是python的一种咋看起来很难理解的，但其实很容易的语法。它的本质其实是一个函数或者类，可以在不改变原函数的情况下添加新的功能。写个简单例子理解它的实现。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-03-10T00:55:40.900Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="python装饰器">
+<meta name="twitter:description" content="什么是装饰器？ 装饰器(Decorators)是python的一种咋看起来很难理解的，但其实很容易的语法。它的本质其实是一个函数或者类，可以在不改变原函数的情况下添加新的功能。写个简单例子理解它的实现。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/11/25/python/python装饰器/">
+
+
+
+
+
+  <title>python装饰器 | 南山有桑,北山有杨</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">南山有桑,北山有杨</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">高山仰止,景行行止<br>虽不能至,然心向往之。</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/25/python/python装饰器/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="theStar">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/logo.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="南山有桑,北山有杨">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">python装饰器</h1>
+        
+
+        <div class="post-meta">
+                
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-25T19:51:20+08:00">
+                2018-11-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/11/25/python/python装饰器/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/11/25/python/python装饰器/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  1.4k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  5
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="什么是装饰器？"><a class="header-anchor" href="#什么是装饰器？"></a>什么是装饰器？</h3>
+<p>装饰器(Decorators)是python的一种咋看起来很难理解的，但其实很容易的语法。它的本质其实是一个函数或者类，可以在不改变原函数的情况下添加新的功能。写个简单例子理解它的实现。</p>
+<a id="more"></a>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># v1</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hello_world</span><span class="params">()</span>:</span></span><br><span class="line">    print(<span class="string">"hello world"</span>)</span><br></pre></td></tr></table></figure>
+<p>某一天我收到了老板新的需求，写了上面的一个hello_world的函数，老板悄悄告诉我说，可以先让项目运行的卡一点，后续作为优化可以多收服务费。我一听，啧啧称奇，不愧是boss,果然是深谋远虑，于是乎我就重写了一下如下。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># v2</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hello_world</span><span class="params">()</span>:</span></span><br><span class="line">    time.sleep(<span class="number">5000</span>)</span><br><span class="line">    print(<span class="string">"hello world"</span>)</span><br></pre></td></tr></table></figure>
+<p>果然后续老板成功收到了优化的服务费用，老板尝到甜头之后，在新的项目开始后，开始指着代码对我说，这里，这里，这里让它先睡个一两秒，毕竟跑这么累，服务器也需要休息的，老板果真是好人，连服务器的辛苦都放在心里，怕它累着了，我感动不已，临码涕零,所谓林禽择木而栖，往后余生，愿鞍前马后，肝脑涂地，以效犬马之劳。一番苦想之后，终于实现了，代码如下。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># v3</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">compassionate_boss</span><span class="params">(func)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">decorator</span><span class="params">()</span>:</span></span><br><span class="line">        time.sleep(<span class="number">5000</span>)</span><br><span class="line">        func()</span><br><span class="line">    <span class="keyword">return</span> decorator</span><br><span class="line"></span><br><span class="line">hello_world = compassionate_boss(hello_world)</span><br></pre></td></tr></table></figure>
+<p>如此这般，只要把需要休息的函数hello_world当做参数传入compassionate_boss函数将其返回值再赋值给需要休息的函数的函数名即可。新的hello_world 现在是compassionate_boss(hello_world)的返回值了，也就是decorator函数，那当我们执行hello_world的时候，实际上执行的是decorator(),也就是time.sleep()和func()这两行代码，那func是啥呢？显然就是传入得参数了，也就是原来的hello_world函数了，新的hello_world相比于以前的hello_word也就多了一个休息的功能,其它需要休息的函数如法炮制一下就可以了。由于我出色了完成了任务，老板午饭多点了一个鸡腿，嗯，有点香。
+　上述的compassionate_boss函数也就是一个装饰器函数了，通过它在没有改动原函数任何代码的基础上成功的添加了休息的功能，不过这个写法怎么和我们平时看到的装饰器不一样呢，好像这些函数都带了有一个**@<strong>符号的帽子，这里啥都没有，怎么就跑出来呢一个装饰器了呢？</strong>@<strong>呢，是python的语法糖，戴帽子的函数呢是需要装饰的函数，</strong>@**后面的函数呢，也就装饰器函数了。那这顶帽子为我们做了什么事情呢，其实也就是为我们执行了这样hello_world = compassionate_boss(hello_world)一个赋值操作。详细写法如下。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">compassionate_boss</span><span class="params">(func)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">decorator</span><span class="params">()</span>:</span></span><br><span class="line">        time.sleep(<span class="number">5000</span>)</span><br><span class="line">        func()</span><br><span class="line">    <span class="keyword">return</span> decorator</span><br><span class="line"></span><br><span class="line"><span class="meta">@compassionate_boss # &lt;==&gt; hello_world = compassionate_boss(hello_world)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hello_world</span><span class="params">()</span>:</span></span><br><span class="line">    print(<span class="string">"hello world"</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="带参数的装饰器"><a class="header-anchor" href="#带参数的装饰器"></a>带参数的装饰器</h3>
+<p>后来，boss把我骂了一顿，说我设置的休息时间太短了，一点都不会体恤服务器的辛苦，boss要亲自上马设置时间，此时此刻，就需要带参数的装饰器出马了。其具体写法如下,compassionate_boss(sleep_time=5)返回的就是wraper函数，实际上就是用wraper函数在装饰hello_world函数，但是通过函数的闭包巧妙的传了一个参数到decorator中去了。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">compassionate_boss</span><span class="params">(sleep_time)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">wraper</span><span class="params">(func)</span>:</span></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">decorator</span><span class="params">()</span>:</span></span><br><span class="line">            time.sleep(sleep_time)</span><br><span class="line">            func()</span><br><span class="line">        <span class="keyword">return</span> decorator</span><br><span class="line">    <span class="keyword">return</span> wraper</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@compassionate_boss(sleep_time=5)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hello_world</span><span class="params">()</span>:</span></span><br><span class="line">    print(<span class="string">"hello world"</span>)</span><br></pre></td></tr></table></figure>
+<p>后来boss亲自上阵设了10s的休息时间,boss就是boss，是个狼人，比狠人还多一点，佩服佩服。</p>
+<h3 id="类装饰器"><a class="header-anchor" href="#类装饰器"></a>类装饰器</h3>
+<p>boss喜爱读书，最近他在读面向对象方面的书籍，老在我面前说什么依赖注入，控制反转，什么上层不应该依赖于细节，应该依赖于抽象，抽象不应该依赖细节，细节应该依赖于抽象，看到了我的装饰器之后说，你看你这个装饰器，一点都不oop，你要用类去实现它。我:…。好吧，你是boss,你说了算。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CompassionateBoss</span><span class="params">()</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, time_sleep)</span>:</span></span><br><span class="line">        self.time_sleep = time_sleep</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__call__</span><span class="params">(self, func)</span>:</span></span><br><span class="line">        time.sleep(self.time_sleep)</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">wraper</span><span class="params">()</span>:</span></span><br><span class="line">            time.sleep(self.time_sleep)</span><br><span class="line">            func()</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> wraper()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@CompassionateBoss(time_sleep=5)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">print</span> <span class="string">"test"</span></span><br></pre></td></tr></table></figure>
+<h3 id="装饰器的问题"><a class="header-anchor" href="#装饰器的问题"></a>装饰器的问题</h3>
+<p>在上述的例子中我们得到了一个新的hello_world函数，但是我们也说过这个hello_world指向的是一个闭包函数，原函数的元信息不见了，那怎么办呢，为了保持原函数的元信息，之后把原函数的信息复制过来了，唉，真累，这么麻烦。不过还好，我们有functools.wraps，它会帮我们复制这些信息。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">compassionate_boss</span><span class="params">(sleep_time)</span>:</span></span><br><span class="line"><span class="meta">    @wraps(func)</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">wraper</span><span class="params">(func)</span>:</span></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">decorator</span><span class="params">()</span>:</span></span><br><span class="line">            time.sleep(sleep_time)</span><br><span class="line">            func()</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> decorator</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> wraper</span><br></pre></td></tr></table></figure>
+<h3 id="总结"><a class="header-anchor" href="#总结"></a>总结</h3>
+<p>装饰器的核心原理是函数闭包，[维基](<a href="https://zh.wikipedia.org/wiki/%E9%97%AD%E5%8C%85_(%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6)%E4%B8%8A%E5%A6%82%E6%98%AF%E8%AF%B4:%E5%9C%A8%E5%87%BD%E6%95%B0%E4%B8%AD%E5%8F%AF%E4%BB%A5%EF%BC%88%E5%B5%8C%E5%A5%97%EF%BC%89%E5%AE%9A%E4%B9%89%E5%8F%A6%E4%B8%80%E4%B8%AA%E5%87%BD%E6%95%B0%E6%97%B6%EF%BC%8C%E5%A6%82%E6%9E%9C%E5%86%85%E9%83%A8%E7%9A%84%E5%87%BD%E6%95%B0%E5%BC%95%E7%94%A8%E4%BA%86%E5%A4%96%E9%83%A8%E7%9A%84%E5%87%BD%E6%95%B0%E7%9A%84%E5%8F%98%E9%87%8F%EF%BC%8C%E5%88%99%E5%8F%AF%E8%83%BD%E4%BA%A7%E7%94%9F%E9%97%AD%E5%8C%85%E3%80%82%E8%BF%90%E8%A1%8C%E6%97%B6%EF%BC%8C%E4%B8%80%E6%97%A6%E5%A4%96%E9%83%A8%E7%9A%84" target="_blank" rel="noopener">https://zh.wikipedia.org/wiki/闭包_(计算机科学)上如是说:在函数中可以（嵌套）定义另一个函数时，如果内部的函数引用了外部的函数的变量，则可能产生闭包。运行时，一旦外部的</a> 函数被执行，一个闭包就形成了，闭包中包含了内部函数的代码，以及所需外部函数中的变量的引用。其中所引用的变量称作上值(upvalue)。只要理解@的作用本质上就是做了hello_world = compassionate_boss(hello_world)这样的一个操作，装饰器的写法什么的也就可推导出来了。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/decorator/" rel="tag"># decorator</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/03/10/python/python作用域/" rel="prev" title="python作用域">
+                python作用域 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/logo.png" alt="theStar">
+          <p class="site-author-name" itemprop="name">theStar</p>
+           
+              <p class="site-description motion-element" itemprop="description">下笔时的思绪 落在了树的荫</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是装饰器？"><span class="nav-number">1.</span> <span class="nav-text">什么是装饰器？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#带参数的装饰器"><span class="nav-number">2.</span> <span class="nav-text">带参数的装饰器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类装饰器"><span class="nav-number">3.</span> <span class="nav-text">类装饰器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#装饰器的问题"><span class="nav-number">4.</span> <span class="nav-text">装饰器的问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">theStar</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://ismewen.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://yoursite.com/2018/11/25/python/python装饰器/';
+          this.page.identifier = '2018/11/25/python/python装饰器/';
+          this.page.title = 'python装饰器';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://ismewen.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
