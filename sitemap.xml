@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2019/04/04/sqlalchemy/sqlalchemy%E4%B9%8Bhybrid-property/</loc>
+    
+    <lastmod>2020-03-10T03:55:27.455Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2019/05/06/index/</loc>
     
     <lastmod>2020-03-10T03:39:08.298Z</lastmod>
@@ -44,14 +51,14 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/about/index.html</loc>
+    <loc>http://yoursite.com/categories/index.html</loc>
     
     <lastmod>2020-03-10T00:55:40.903Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://yoursite.com/categories/index.html</loc>
+    <loc>http://yoursite.com/about/index.html</loc>
     
     <lastmod>2020-03-10T00:55:40.903Z</lastmod>
     
@@ -73,13 +80,6 @@
   
   <url>
     <loc>http://yoursite.com/2019/09/03/%E8%BF%9C%E6%96%B9/</loc>
-    
-    <lastmod>2020-03-10T00:55:40.902Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2019/08/21/sqlalchemy%E5%88%9D%E7%AF%87/</loc>
     
     <lastmod>2020-03-10T00:55:40.902Z</lastmod>
     
@@ -129,13 +129,6 @@
   
   <url>
     <loc>http://yoursite.com/2019/04/14/reading/%E5%B2%9B%E4%B8%8A%E4%B9%A6%E5%BA%97/</loc>
-    
-    <lastmod>2020-03-10T00:55:40.901Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2019/04/04/sqlalchemy/sqlalchemy%E4%B9%8Bhybrid-property/</loc>
     
     <lastmod>2020-03-10T00:55:40.901Z</lastmod>
     
