@@ -78,7 +78,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css">
 
 
-  <meta name="keywords" content="python,">
+  <meta name="keywords" content="Hexo, NexT">
 
 
 
@@ -94,18 +94,17 @@
 
 
 
-<meta name="description" content="下笔时的思绪 落在了树的荫">
-<meta name="keywords" content="python">
+<meta name="description" content="刚开始用python的时候,写了几段比较黑暗的代码。在很多的地方用到 eval 函数，后来被架构师看到了，他说任何用eval的地方，都可以通过其它方式实现， 再后来我就学到一句经典名言，eval is evil,最后我通过getattr和setattr两个内置函数消除了所有的eval,也是第一次有了函数内省的概念。慢慢的工作 学习下来也有了更多的认识。借此对python中函数内省相关知识做一个总结">
 <meta property="og:type" content="article">
 <meta property="og:title" content="函数内省">
 <meta property="og:url" content="http://yoursite.com/2019/12/02/函数内省/index.html">
 <meta property="og:site_name" content="南山有桑,北山有杨">
-<meta property="og:description" content="下笔时的思绪 落在了树的荫">
+<meta property="og:description" content="刚开始用python的时候,写了几段比较黑暗的代码。在很多的地方用到 eval 函数，后来被架构师看到了，他说任何用eval的地方，都可以通过其它方式实现， 再后来我就学到一句经典名言，eval is evil,最后我通过getattr和setattr两个内置函数消除了所有的eval,也是第一次有了函数内省的概念。慢慢的工作 学习下来也有了更多的认识。借此对python中函数内省相关知识做一个总结">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-03-10T00:55:40.902Z">
+<meta property="og:updated_time" content="2020-03-15T14:21:05.233Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="函数内省">
-<meta name="twitter:description" content="下笔时的思绪 落在了树的荫">
+<meta name="twitter:description" content="刚开始用python的时候,写了几段比较黑暗的代码。在很多的地方用到 eval 函数，后来被架构师看到了，他说任何用eval的地方，都可以通过其它方式实现， 再后来我就学到一句经典名言，eval is evil,最后我通过getattr和setattr两个内置函数消除了所有的eval,也是第一次有了函数内省的概念。慢慢的工作 学习下来也有了更多的认识。借此对python中函数内省相关知识做一个总结">
 
 
 
@@ -324,6 +323,28 @@
           </span>
 
           
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -355,7 +376,7 @@
                   <span class="post-meta-item-text">字数统计</span>
                 
                 <span title="字数统计">
-                  0
+                  152
                 </span>
               
 
@@ -392,7 +413,13 @@
       
 
       
-        
+        <p>刚开始用python的时候,写了几段比较黑暗的代码。在很多的地方用到 <code>eval</code> 函数，后来被架构师看到了，他说任何用eval的地方，都可以通过其它方式实现，
+再后来我就学到一句经典名言，<strong>eval is evil</strong>,最后我通过getattr和setattr两个内置函数消除了所有的eval,也是第一次有了函数内省的概念。慢慢的工作
+学习下来也有了更多的认识。借此对python中函数内省相关知识做一个总结。</p>
+<a id="more"></a>
+<p>测试</p>
+<h3 id="什么是函数内省？"><a class="header-anchor" href="#什么是函数内省？"></a>什么是函数内省？</h3>
+
       
     </div>
     
@@ -407,12 +434,6 @@
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/python/" rel="tag"># python</a>
-          
-        </div>
-      
 
       
       
@@ -422,8 +443,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/11/30/kubeadm搭建k8s/" rel="next" title="kubeadm搭建k8s">
-                <i class="fa fa-chevron-left"></i> kubeadm搭建k8s
+              <a href="/2019/09/19/兰姨/" rel="next" title="兰姨">
+                <i class="fa fa-chevron-left"></i> 兰姨
               </a>
             
           </div>
@@ -432,7 +453,7 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/12/19/python的字典/" rel="prev" title="如何自己实现python的字典？">
+              <a href="/2019/12/19/python/python的字典/" rel="prev" title="如何自己实现python的字典？">
                 如何自己实现python的字典？ <i class="fa fa-chevron-right"></i>
               </a>
             
@@ -493,8 +514,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image" src="/images/logo.png" alt="theStar">
           <p class="site-author-name" itemprop="name">theStar</p>
@@ -507,7 +537,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">26</span>
+                <span class="site-state-item-count">25</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -529,7 +559,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-count">14</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -554,6 +584,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是函数内省？"><span class="nav-number">1.</span> <span class="nav-text">什么是函数内省？</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
